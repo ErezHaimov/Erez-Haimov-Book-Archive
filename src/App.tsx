@@ -12,6 +12,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingBook, setEditingBook] = useState<BookResponse | null>(null);
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -52,6 +53,20 @@ function App() {
     }
   };
 
+  const handleUpdate = async (updatedFields: BookRequest) => {
+    if (!editingBook) return;
+    try {
+      const res = await ApiService.updateBook(editingBook.id, updatedFields);
+      if (res.data) {
+        setBooks((prev) =>
+          prev.map((b) => (b.id === editingBook.id ? res.data : b)),
+        );
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const handleToggleFavorite = async (book: BookResponse) => {
     try {
       const updated: BookRequest = { ...book, isFavorite: !book.isFavorite };
@@ -64,11 +79,21 @@ function App() {
     }
   };
 
+  const openCreateModal = () => {
+    setEditingBook(null);
+    setIsModalOpen(true);
+  };
+
+  const openEditModal = (book: BookResponse) => {
+    setEditingBook(book);
+    setIsModalOpen(true);
+  };
+
   return (
     <Layout>
       {isLoading && <p>טוען...</p>}
       {error && <p className="text-red-600">{error}</p>}
-      <Button onClick={() => setIsModalOpen(true)} className="mb-6">
+      <Button onClick={openCreateModal} className="mb-6">
         + הוסף ספר
       </Button>{" "}
       <div className="grid [grid-template-columns:repeat(auto-fill,minmax(220px,1fr))] gap-6">
@@ -78,14 +103,16 @@ function App() {
             book={book}
             onDelete={handleDelete}
             onToggleFavorite={handleToggleFavorite}
+            onEdit={openEditModal}
           />
         ))}
       </div>{" "}
       <BookFormModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onSubmit={handleCreate}
-        title="הוספת ספר חדש"
+        onSubmit={editingBook ? handleUpdate : handleCreate}
+        initialValues={editingBook ?? undefined}
+        title={editingBook ? "עריכת ספר" : "הוספת ספר חדש"}
       />
     </Layout>
   );

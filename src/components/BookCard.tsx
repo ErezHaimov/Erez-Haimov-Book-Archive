@@ -1,16 +1,18 @@
-import { HiTrash, HiHeart, HiOutlineHeart } from "react-icons/hi";
+import { HiTrash, HiHeart, HiOutlineHeart, HiPencil } from "react-icons/hi";
 import type { BookResponse } from "../models/book-response";
 
 interface BookCardProps {
   book: BookResponse;
   onDelete: (id: string) => void;
   onToggleFavorite: (book: BookResponse) => void;
+  onEdit: (book: BookResponse) => void;
 }
 
 export default function BookCard({
   book,
   onDelete,
   onToggleFavorite,
+  onEdit,
 }: BookCardProps) {
   return (
     <div className="rounded-lg bg-white p-4 shadow dark:bg-gray-800">
@@ -41,6 +43,14 @@ export default function BookCard({
             ) : (
               <HiOutlineHeart size={18} className="text-gray-400" />
             )}
+          </button>
+
+          <button
+            onClick={() => onEdit(book)}
+            className="rounded-full p-2 text-blue-600 hover:bg-blue-100 dark:hover:bg-blue-900"
+            aria-label="ערוך ספר"
+          >
+            <HiPencil size={18} />
           </button>
 
           <button
