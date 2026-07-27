@@ -52,6 +52,18 @@ function App() {
     }
   };
 
+  const handleToggleFavorite = async (book: BookResponse) => {
+    try {
+      const updated: BookRequest = { ...book, isFavorite: !book.isFavorite };
+      const res = await ApiService.updateBook(book.id, updated);
+      if (res.data) {
+        setBooks((prev) => prev.map((b) => (b.id === book.id ? res.data : b)));
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <Layout>
       {isLoading && <p>טוען...</p>}
@@ -61,7 +73,12 @@ function App() {
       </Button>{" "}
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {books.map((book) => (
-          <BookCard key={book.id} book={book} onDelete={handleDelete} />
+          <BookCard
+            key={book.id}
+            book={book}
+            onDelete={handleDelete}
+            onToggleFavorite={handleToggleFavorite}
+          />
         ))}
       </div>{" "}
       <BookFormModal
