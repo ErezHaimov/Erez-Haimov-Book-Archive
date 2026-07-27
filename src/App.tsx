@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Layout from "./layout/Layout";
 import { ApiService } from "./services/api-service";
 import type { BookResponse } from "./models/book-response";
+import BookCard from "./components/BookCard";
 
 function App() {
   const [books, setBooks] = useState<Array<BookResponse>>([]);
@@ -29,27 +30,11 @@ function App() {
     <Layout>
       {isLoading && <p>טוען...</p>}
       {error && <p className="text-red-600">{error}</p>}
-
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {books.map((book) => (
-          <div
-            key={book.id}
-            className="rounded-lg bg-white p-4 shadow dark:bg-gray-800"
-          >
-            <img
-              src={book.coverImage}
-              alt={book.title}
-              className="mb-3 h-48 w-full rounded object-cover"
-            />
-            <h2 className="text-lg font-bold text-gray-900 dark:text-white">
-              {book.title}
-            </h2>
-            <p className="text-sm text-gray-600 dark:text-gray-300">
-              {book.author}
-            </p>
-          </div>
+          <BookCard key={book.id} book={book} />
         ))}
-      </div>
+      </div>{" "}
     </Layout>
   );
 }
