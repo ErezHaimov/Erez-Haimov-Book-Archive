@@ -41,6 +41,17 @@ function App() {
     }
   };
 
+  const handleDelete = async (id: string) => {
+    try {
+      const res = await ApiService.deleteBook(id);
+      if (res.data) {
+        setBooks((prev) => prev.filter((book) => book.id !== id));
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <Layout>
       {isLoading && <p>טוען...</p>}
@@ -50,7 +61,7 @@ function App() {
       </Button>{" "}
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {books.map((book) => (
-          <BookCard key={book.id} book={book} />
+          <BookCard key={book.id} book={book} onDelete={handleDelete} />
         ))}
       </div>{" "}
       <BookFormModal
