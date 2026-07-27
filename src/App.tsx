@@ -71,7 +71,7 @@ function App() {
       <Button onClick={() => setIsModalOpen(true)} className="mb-6">
         + הוסף ספר
       </Button>{" "}
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div className="grid [grid-template-columns:repeat(auto-fill,minmax(220px,1fr))] gap-6">
         {books.map((book) => (
           <BookCard
             key={book.id}
