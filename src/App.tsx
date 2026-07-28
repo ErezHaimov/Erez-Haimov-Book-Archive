@@ -13,6 +13,7 @@ function App() {
   const [error, setError] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingBook, setEditingBook] = useState<BookResponse | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -89,15 +90,26 @@ function App() {
     setIsModalOpen(true);
   };
 
+  const filteredBooks = books.filter((book) =>
+    book.title.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
+
   return (
     <Layout>
       {isLoading && <p>טוען...</p>}
       {error && <p className="text-red-600">{error}</p>}
-      <Button onClick={openCreateModal} className="mb-6">
-        + הוסף ספר
-      </Button>{" "}
+      <div className="mb-6 flex flex-wrap items-center gap-4">
+        <Button onClick={openCreateModal}>+ הוסף ספר</Button>
+        <input
+          type="text"
+          placeholder="חפש ספר לפי שם..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full max-w-xs rounded-lg border px-3 py-2 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
+        />
+      </div>
       <div className="grid [grid-template-columns:repeat(auto-fill,minmax(220px,1fr))] gap-6">
-        {books.map((book) => (
+        {filteredBooks.map((book) => (
           <BookCard
             key={book.id}
             book={book}
@@ -107,6 +119,9 @@ function App() {
           />
         ))}
       </div>{" "}
+      {filteredBooks.length === 0 && !isLoading && (
+        <p className="text-gray-500">לא נמצאו ספרים התואמים לחיפוש</p>
+      )}
       <BookFormModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
