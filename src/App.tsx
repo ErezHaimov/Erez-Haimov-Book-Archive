@@ -6,6 +6,7 @@ import BookFormModal from "./components/BookFormModal";
 import { ApiService } from "./services/api-service";
 import type { BookResponse } from "./models/book-response";
 import type { BookRequest } from "./models/book-request";
+import { HiPlus } from "react-icons/hi";
 
 function App() {
   const [books, setBooks] = useState<Array<BookResponse>>([]);
@@ -96,19 +97,20 @@ function App() {
   );
 
   return (
-    <Layout>
-      <div className="mb-6 flex flex-wrap items-center gap-4">
-        <Button onClick={openCreateModal}>+ הוסף ספר</Button>
-
-        <input
-          type="text"
-          placeholder="חפש ספר לפי שם..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full max-w-xs rounded-lg border px-3 py-2 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
-        />
-      </div>
-
+    <Layout
+      headerActions={
+        <>
+          <input
+            type="text"
+            placeholder="חפש ספר לפי שם..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-64 rounded-lg border px-3 py-2 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
+          />
+          <Button onClick={openCreateModal}>הוסף ספר</Button>
+        </>
+      }
+    >
       {isLoading && (
         <div className="flex flex-col items-center justify-center py-12">
           <Spinner size="xl" />
@@ -137,8 +139,15 @@ function App() {
                 onEdit={openEditModal}
               />
             ))}
+            <button
+              onClick={openCreateModal}
+              className="flex h-full min-h-[280px] w-full flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-gray-300 p-4 text-gray-400 transition-colors hover:border-blue-400 hover:text-blue-500 dark:border-gray-600 dark:text-gray-500 dark:hover:border-blue-500 dark:hover:text-blue-400"
+              aria-label="הוסף ספר חדש"
+            >
+              <HiPlus size={40} />
+              <span className="text-sm font-medium">הוסף ספר</span>
+            </button>
           </div>
-
           {filteredBooks.length === 0 && (
             <p className="mt-4 text-gray-500">לא נמצאו ספרים התואמים לחיפוש</p>
           )}
