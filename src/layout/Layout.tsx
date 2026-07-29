@@ -12,7 +12,7 @@ export default function Layout({ children }: PropsWithChildren) {
       <main className="flex-1 px-6 py-8">{children}</main>
 
       <footer className="bg-gray-800 py-4 text-center text-white">
-        My Book Archive &copy; {new Date().getFullYear()}
+        Erez Haimov | All Rights Reserved &copy; {new Date().getFullYear()}
       </footer>
     </div>
   );
