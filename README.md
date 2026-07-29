@@ -32,7 +32,8 @@ It highlights my ability to build a fully functional single-page application tha
 
 ### Screenshot
 
-![Site Screenshot](pictures/Screenshots/site-screenshot.png)
+![Site Screenshot](pictures/Screenshots/site-screenshot-lightmode.png)
+![Site Screenshot](pictures/Screenshots/site-screenshot-darkmode.png)
 
 ### Links
 
