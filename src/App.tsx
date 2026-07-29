@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
+import { Button, Spinner } from "flowbite-react";
 import Layout from "./layout/Layout";
+import BookCard from "./components/BookCard";
+import BookFormModal from "./components/BookFormModal";
 import { ApiService } from "./services/api-service";
 import type { BookResponse } from "./models/book-response";
-import BookCard from "./components/BookCard";
-import { Button } from "flowbite-react";
-import BookFormModal from "./components/BookFormModal";
 import type { BookRequest } from "./models/book-request";
 
 function App() {
@@ -15,20 +15,21 @@ function App() {
   const [editingBook, setEditingBook] = useState<BookResponse | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
 
-  useEffect(() => {
-    const fetchBooks = async () => {
-      setIsLoading(true);
-      try {
-        const res = await ApiService.getBooks();
-        setBooks(res.data);
-      } catch (err) {
-        console.error(err);
-        setError("שגיאה בטעינת הספרים");
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  const fetchBooks = async () => {
+    setIsLoading(true);
+    setError("");
+    try {
+      const res = await ApiService.getBooks();
+      setBooks(res.data);
+    } catch (err) {
+      console.error(err);
+      setError("שגיאה בטעינת הספרים. בדוק את החיבור שלך ונסה שוב.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchBooks();
   }, []);
 
@@ -54,6 +55,18 @@ function App() {
     }
   };
 
+  const handleToggleFavorite = async (book: BookResponse) => {
+    try {
+      const updated: BookRequest = { ...book, isFavorite: !book.isFavorite };
+      const res = await ApiService.updateBook(book.id, updated);
+      if (res.data) {
+        setBooks((prev) => prev.map((b) => (b.id === book.id ? res.data : b)));
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const handleUpdate = async (updatedFields: BookRequest) => {
     if (!editingBook) return;
     try {
@@ -62,18 +75,6 @@ function App() {
         setBooks((prev) =>
           prev.map((b) => (b.id === editingBook.id ? res.data : b)),
         );
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const handleToggleFavorite = async (book: BookResponse) => {
-    try {
-      const updated: BookRequest = { ...book, isFavorite: !book.isFavorite };
-      const res = await ApiService.updateBook(book.id, updated);
-      if (res.data) {
-        setBooks((prev) => prev.map((b) => (b.id === book.id ? res.data : b)));
       }
     } catch (err) {
       console.error(err);
@@ -96,10 +97,9 @@ function App() {
 
   return (
     <Layout>
-      {isLoading && <p>טוען...</p>}
-      {error && <p className="text-red-600">{error}</p>}
       <div className="mb-6 flex flex-wrap items-center gap-4">
         <Button onClick={openCreateModal}>+ הוסף ספר</Button>
+
         <input
           type="text"
           placeholder="חפש ספר לפי שם..."
@@ -108,20 +108,43 @@ function App() {
           className="w-full max-w-xs rounded-lg border px-3 py-2 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
         />
       </div>
-      <div className="grid [grid-template-columns:repeat(auto-fill,minmax(220px,1fr))] gap-6">
-        {filteredBooks.map((book) => (
-          <BookCard
-            key={book.id}
-            book={book}
-            onDelete={handleDelete}
-            onToggleFavorite={handleToggleFavorite}
-            onEdit={openEditModal}
-          />
-        ))}
-      </div>{" "}
-      {filteredBooks.length === 0 && !isLoading && (
-        <p className="text-gray-500">לא נמצאו ספרים התואמים לחיפוש</p>
+
+      {isLoading && (
+        <div className="flex flex-col items-center justify-center py-12">
+          <Spinner size="xl" />
+          <p className="mt-4 text-gray-500">טוען ספרים...</p>
+        </div>
       )}
+
+      {!isLoading && error && (
+        <div className="py-8 text-center">
+          <p className="mb-3 text-red-600">{error}</p>
+          <Button color="red" onClick={fetchBooks}>
+            נסה שוב
+          </Button>
+        </div>
+      )}
+
+      {!isLoading && !error && (
+        <>
+          <div className="grid [grid-template-columns:repeat(auto-fill,minmax(220px,1fr))] gap-6">
+            {filteredBooks.map((book) => (
+              <BookCard
+                key={book.id}
+                book={book}
+                onDelete={handleDelete}
+                onToggleFavorite={handleToggleFavorite}
+                onEdit={openEditModal}
+              />
+            ))}
+          </div>
+
+          {filteredBooks.length === 0 && (
+            <p className="mt-4 text-gray-500">לא נמצאו ספרים התואמים לחיפוש</p>
+          )}
+        </>
+      )}
+
       <BookFormModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
