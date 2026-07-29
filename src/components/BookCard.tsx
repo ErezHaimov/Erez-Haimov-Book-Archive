@@ -54,7 +54,7 @@ export default function BookCard({
           onError={(e) => {
             e.currentTarget.onerror = null;
             e.currentTarget.src =
-              "https://placehold.co/400x600?text=Cover%0AError";
+              "https://placehold.co/400x600?text=Cover%0ANot%0AFound";
           }}
         />
 

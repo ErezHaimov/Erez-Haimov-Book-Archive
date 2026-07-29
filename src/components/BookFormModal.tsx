@@ -47,11 +47,21 @@ export default function BookFormModal({
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
-  const isValid = form.title.trim().length > 0;
+  const isTitleValid = form.title.trim().length > 0;
+  const isAuthorValid = form.author.trim().length > 0;
+  const isCoverImageValid = form.coverImage.trim().length > 0;
+
+  const isValid = isTitleValid && isAuthorValid && isCoverImageValid;
 
   const handleSubmit = () => {
     if (!isValid) return;
-    onSubmit(form);
+    onSubmit({
+      ...form,
+      title: form.title.trim(),
+      author: form.author.trim(),
+      coverImage: form.coverImage.trim(),
+      description: form.description?.trim(),
+    });
     onClose();
   };
 
@@ -61,29 +71,42 @@ export default function BookFormModal({
       <ModalBody>
         <div className="space-y-4">
           <div>
-            <Label htmlFor="title">Title *</Label>
+            <Label htmlFor="title">
+              Title *<span className="text-xs text-gray-400">(Required)</span>
+            </Label>
             <TextInput
               id="title"
               value={form.title}
               onChange={(e) => handleChange("title", e.target.value)}
-              color={!isValid && form.title !== "" ? "failure" : undefined}
+              color={!isTitleValid && form.title !== "" ? "failure" : undefined}
             />
-            {!isValid && form.title !== "" && (
+            {!isTitleValid && form.title !== "" && (
               <HelperText color="failure">Title is required</HelperText>
             )}
           </div>
 
           <div>
-            <Label htmlFor="author">Author</Label>
+            <Label htmlFor="author">
+              Author *<span className="text-xs text-gray-400">(Required)</span>
+            </Label>
             <TextInput
               id="author"
               value={form.author}
               onChange={(e) => handleChange("author", e.target.value)}
+              color={
+                !isAuthorValid && form.author !== "" ? "failure" : undefined
+              }
             />
+            {!isAuthorValid && form.author !== "" && (
+              <HelperText color="failure">Author is required</HelperText>
+            )}
           </div>
 
           <div>
-            <Label htmlFor="description">Description</Label>
+            <Label htmlFor="description">
+              Description
+              <span className="text-xs text-gray-400">(Optional)</span>
+            </Label>
             <Textarea
               id="description"
               rows={3}
@@ -93,12 +116,25 @@ export default function BookFormModal({
           </div>
 
           <div>
-            <Label htmlFor="coverImage">Cover Image URL</Label>
+            <Label htmlFor="coverImage">
+              Cover Image URL *
+              <span className="text-xs text-gray-400">(Required)</span>
+            </Label>
             <TextInput
               id="coverImage"
               value={form.coverImage}
               onChange={(e) => handleChange("coverImage", e.target.value)}
+              color={
+                !isCoverImageValid && form.coverImage !== ""
+                  ? "failure"
+                  : undefined
+              }
             />
+            {!isCoverImageValid && form.coverImage !== "" && (
+              <HelperText color="failure">
+                Cover Image URL is required
+              </HelperText>
+            )}
           </div>
 
           <div className="flex items-center gap-2 pt-2">
