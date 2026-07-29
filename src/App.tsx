@@ -24,7 +24,9 @@ function App() {
       setBooks(res.data);
     } catch (err) {
       console.error(err);
-      setError("שגיאה בטעינת הספרים. בדוק את החיבור שלך ונסה שוב.");
+      setError(
+        "Error loading books. Please check your connection and try again.",
+      );
     } finally {
       setIsLoading(false);
     }
@@ -102,19 +104,21 @@ function App() {
         <>
           <input
             type="text"
-            placeholder="חפש ספר לפי שם..."
+            placeholder="Search by book title..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-64 rounded-lg border px-3 py-2 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
           />
-          <Button onClick={openCreateModal}>הוסף ספר</Button>
+          <Button onClick={openCreateModal} className="dark:hover:bg-blue-500">
+            Add Book
+          </Button>
         </>
       }
     >
       {isLoading && (
         <div className="flex flex-col items-center justify-center py-12">
           <Spinner size="xl" />
-          <p className="mt-4 text-gray-500">טוען ספרים...</p>
+          <p className="mt-4 text-gray-500">Loading books...</p>
         </div>
       )}
 
@@ -122,7 +126,7 @@ function App() {
         <div className="py-8 text-center">
           <p className="mb-3 text-red-600">{error}</p>
           <Button color="red" onClick={fetchBooks}>
-            נסה שוב
+            Try again
           </Button>
         </div>
       )}
@@ -142,14 +146,16 @@ function App() {
             <button
               onClick={openCreateModal}
               className="flex h-full min-h-[280px] w-full flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-gray-300 p-4 text-gray-400 transition-colors hover:border-blue-400 hover:text-blue-500 dark:border-gray-600 dark:text-gray-500 dark:hover:border-blue-500 dark:hover:text-blue-400"
-              aria-label="הוסף ספר חדש"
+              aria-label="Add new book"
             >
               <HiPlus size={40} />
-              <span className="text-sm font-medium">הוסף ספר</span>
+              <span className="text-sm font-medium">Add Book</span>
             </button>
           </div>
           {filteredBooks.length === 0 && (
-            <p className="mt-4 text-gray-500">לא נמצאו ספרים התואמים לחיפוש</p>
+            <p className="mt-4 text-gray-500">
+              No books found matching your search.
+            </p>
           )}
         </>
       )}
@@ -159,7 +165,7 @@ function App() {
         onClose={() => setIsModalOpen(false)}
         onSubmit={editingBook ? handleUpdate : handleCreate}
         initialValues={editingBook ?? undefined}
-        title={editingBook ? "עריכת ספר" : "הוספת ספר חדש"}
+        title={editingBook ? "Editing book" : "Adding new book"}
       />
     </Layout>
   );

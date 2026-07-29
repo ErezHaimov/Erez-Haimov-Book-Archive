@@ -60,10 +60,11 @@ The app will be available at `http://localhost:5173`.
 - Add, edit, and delete books from a personal catalog
 - Mark/unmark books as favorites with a live-updating heart icon
 - Real-time search/filter by book title
-- Responsive card-based grid layout (1–4 columns depending on screen size)
+- Responsive card-based grid layout depending on screen size
 - Initial catalog data fetched from an external REST API (MockAPI)
 - Modal-based forms for creating and editing books
 - Loading and error states for all API operations
+- Dark/Light mode with persistence across sessions
 
 ## My process
 
@@ -82,7 +83,6 @@ The app will be available at `http://localhost:5173`.
 
 I plan to extend this project with the following improvements:
 
-- Dark/Light mode toggle with persistence
 - Sorting the catalog (by title, author, or favorite status)
 - Pagination or infinite scroll for larger catalogs
 - Unit tests for core logic functions (API service, filtering)
