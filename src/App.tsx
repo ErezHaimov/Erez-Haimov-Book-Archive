@@ -122,9 +122,13 @@ function App() {
     setIsModalOpen(true);
   };
 
-  const filteredBooks = books.filter((book) =>
-    book.title.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
+  const filteredBooks = books.filter((book) => {
+    const term = searchTerm.toLowerCase();
+    return (
+      book.title.toLowerCase().includes(term) ||
+      book.author.toLowerCase().includes(term)
+    );
+  });
 
   return (
     <Layout
@@ -132,7 +136,7 @@ function App() {
         <>
           <input
             type="text"
-            placeholder="Search by book title..."
+            placeholder="Search by title or author..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-64 rounded-lg border px-3 py-2 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
