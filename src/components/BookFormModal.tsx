@@ -47,9 +47,19 @@ export default function BookFormModal({
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
+  const isValidUrl = (value: string) => {
+    try {
+      const url = new URL(value);
+      return url.protocol === "http:" || url.protocol === "https:";
+    } catch {
+      return false;
+    }
+  };
+
   const isTitleValid = form.title.trim().length > 0;
   const isAuthorValid = form.author.trim().length > 0;
-  const isCoverImageValid = form.coverImage.trim().length > 0;
+  const isCoverImageValid =
+    form.coverImage.trim().length > 0 && isValidUrl(form.coverImage.trim());
 
   const isValid = isTitleValid && isAuthorValid && isCoverImageValid;
 
@@ -125,14 +135,14 @@ export default function BookFormModal({
               value={form.coverImage}
               onChange={(e) => handleChange("coverImage", e.target.value)}
               color={
-                !isCoverImageValid && form.coverImage !== ""
+                form.coverImage !== "" && !isCoverImageValid
                   ? "failure"
                   : undefined
               }
             />
-            {!isCoverImageValid && form.coverImage !== "" && (
+            {form.coverImage !== "" && !isCoverImageValid && (
               <HelperText color="failure">
-                Cover Image URL is required
+                Please enter a valid URL, e.g. https://example.com/image.jpg
               </HelperText>
             )}
           </div>

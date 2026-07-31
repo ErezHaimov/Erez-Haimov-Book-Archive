@@ -10,7 +10,7 @@ import type { BookResponse } from "../models/book-response";
 
 interface BookCardProps {
   book: BookResponse;
-  onDelete: (id: string) => void;
+  onDelete: (book: BookResponse) => void;
   onToggleFavorite: (book: BookResponse) => void;
   onEdit: (book: BookResponse) => void;
 }
@@ -113,7 +113,7 @@ export default function BookCard({
         </button>
 
         <button
-          onClick={() => onDelete(book.id)}
+          onClick={() => onDelete(book)}
           className="rounded-full p-2 text-red-600 hover:bg-red-100 dark:hover:bg-white/10"
           aria-label="Delete book"
         >
