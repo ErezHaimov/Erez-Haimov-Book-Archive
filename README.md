@@ -51,7 +51,8 @@ npm install
 npm run dev
 ```
 
-The app will be available at `http://localhost:5173`.
+The app should be available at `http://localhost:5173`.
+Follow the instruction on your terminal to make sure the app is not launched on a different port.
 
 > Note: The app expects a MockAPI resource named `books` with fields `title`, `author`, `description`, `coverImage`, and `isFavorite`. Update the `baseURL` in `src/services/api-service.ts` with your own MockAPI endpoint before running.
 

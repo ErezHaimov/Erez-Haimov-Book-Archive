@@ -35,7 +35,12 @@ export default function ConfirmModal({
         >
           Yes, Delete
         </Button>
-        <Button type="button" color="gray" onClick={onCancel}>
+        <Button
+          type="button"
+          color="gray"
+          onClick={onCancel}
+          className="dark:hover:bg-gray-500"
+        >
           Cancel
         </Button>
       </ModalFooter>
