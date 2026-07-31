@@ -81,7 +81,7 @@ export default function BookCard({
       </div>
 
       <div className="flex-1">
-        <h2 className="truncate text-lg font-bold text-gray-900 dark:text-white">
+        <h2 className="line-clamp-2 h-[2.8rem] text-lg leading-snug font-bold text-gray-900 dark:text-white">
           {book.title}
         </h2>
         <p className="line-clamp-1 text-sm text-gray-600 dark:text-gray-300">

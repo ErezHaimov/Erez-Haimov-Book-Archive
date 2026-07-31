@@ -48,25 +48,30 @@ function App() {
   };
 
   const handleDelete = async (id: string) => {
+    const previousBooks = books;
+    setBooks((prev) => prev.filter((book) => book.id !== id));
     try {
-      const res = await ApiService.deleteBook(id);
-      if (res.data) {
-        setBooks((prev) => prev.filter((book) => book.id !== id));
-      }
+      await ApiService.deleteBook(id);
     } catch (err) {
       console.error(err);
+      setBooks(previousBooks); // נכשל? מחזירים את הספר שנמחק
     }
   };
 
   const handleToggleFavorite = async (book: BookResponse) => {
+    const previousBooks = books;
+    const optimisticBook: BookResponse = {
+      ...book,
+      isFavorite: !book.isFavorite,
+    };
+    setBooks((prev) =>
+      prev.map((b) => (b.id === book.id ? optimisticBook : b)),
+    );
     try {
-      const updated: BookRequest = { ...book, isFavorite: !book.isFavorite };
-      const res = await ApiService.updateBook(book.id, updated);
-      if (res.data) {
-        setBooks((prev) => prev.map((b) => (b.id === book.id ? res.data : b)));
-      }
+      await ApiService.updateBook(book.id, optimisticBook);
     } catch (err) {
       console.error(err);
+      setBooks(previousBooks); // נכשל? מחזירים למצב הקודם
     }
   };
 
